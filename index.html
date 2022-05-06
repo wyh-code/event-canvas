@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas-Event</title>
+  <style>
+    .container{
+      margin: 30px auto;
+      width: 1000px;
+      border: 1px solid red;
+      /*; */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <canvas id="canvas" style="width: 1000px; height: 600px"></canvas>
+  </div>
+  <button id="add">添加元素</button>
+  <button id="custom">自定义绘制</button>
+
+  <script type="module">
+    import { EventCanvas, Circle } from './index.js';
+    const eventCanvas = new EventCanvas({
+      canvas,
+      data: [
+        {
+          x: 10,
+          y: 10,
+          width: 200,
+          height: 200,
+          fillColor: 'red',
+          type: 'rect',
+          click: (e, options) => {
+            console.log(e, options)
+          }
+        },
+        {
+          name: '绿圆',
+          x: 100,
+          y: 100,
+          radius: 50,
+          fillColor: 'green',
+          type: 'circle',
+          // stop: 'click',
+          click: (event, options) => {
+            // console.log(options, '==circle-options==')
+            const span = document.createElement('span');
+            span.innerText = `您点击了 ${options.name}`;
+            span.style.position = 'fixed';
+            span.style.zIndex = 2;
+            span.style.left = options.clientX + 'px';
+            span.style.top = options.clientY + 'px';
+            span.style.transform = 'translate(-50%, -100%)'
+            document.body.appendChild(span);
+            setTimeout(() => {
+              span.remove()
+            }, 1000)
+          },
+          drag: (options) => {
+            console.log(options)
+          },
+        }
+      ]
+    })
+    eventCanvas.on('click', (event, nodes) => {
+      console.log(event, nodes, '=eventCanvas==')
+    })
+
+    let x = 200;
+    let y = 200
+    add.onclick = function(){
+      const circle = new Circle({
+        name: '黄圆',
+        x,
+        y,
+        eleId: eventCanvas.eleId,
+        radius: 50,
+        fillColor: 'yellow',
+        drag: (options) => {
+          console.log(options)
+        },
+        click: (options) => {
+          console.log(options, '==黄圆-options==')
+        }
+      })
+      x += 200;
+      y += 200
+      eventCanvas.addElement(circle)
+    }
+
+    custom.onclick = function (){
+      const options = {
+        name: 'custom',
+        click: (options) => {
+          console.log(options, '==custom==')
+        },
+        drag(options){
+          console.log('custom-drag-options--', options)
+        },
+        fill: false,
+        x: 300,
+        y: 350,
+        draw: (ctx) => {
+          ctx.beginPath()
+          ctx.moveTo(options.x, options.y);
+          ctx.lineTo(options.x, options.y + 150);
+          ctx.lineTo(options.x + 150, options.y + 150);
+          ctx.strokeStyle = 'red';
+          ctx.lineWidth = 10;
+          ctx.stroke()
+        }
+      }
+      eventCanvas.custom(options)
+    }
+  </script>
+</body>
+</html>
