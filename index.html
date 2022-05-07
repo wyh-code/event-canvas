@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .container{
+      margin: 30px auto;
+      width: 1000px;
+      border: 1px solid red;
+     
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <canvas id="c" style="width: 1000px; height: 600px"></canvas>
+  </div>
+  <script type="module">
+    import { EventCanvas, Circle } from './index.js';
+    const eventCanvas = new EventCanvas({
+      canvas: c, 
+      sort: 1, // 1-重叠时事件触发由上到下， 0-相反
+      data: [
+        {
+          x: 10,
+          y: 10,
+          width: 200,
+          height: 200,
+          fillColor: 'red',
+          type: 'rect',
+          drag(event, options){
+            console.log(event, options)
+          },
+          click: (event, options) => {
+            console.log('----', options)
+          }
+        },
+        {
+        name: '黄圆',
+        x: 200,
+        y: 400,
+        radius: 50,
+        fillColor: 'yellow',
+        type: 'circle',
+        drag(){
+
+        },
+        click: (options) => {
+          console.log(options, '==黄圆-options==')
+        }
+      }
+      ]
+    });
+  </script>
+</body>
+</html>
