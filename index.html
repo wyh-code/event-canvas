@@ -116,13 +116,14 @@
         x: 100,
         y: 100,
         font: {
-          font: '100px "Microsoft YaHei"',
+          font: '60px "Microsoft YaHei"',
           color: 'red',
           value: '自定义文本绘制',
-          strokeText: true
+          strokeText: true,
+          textBaseline: 'top'
         },
         drag(event, options){
-          console.log('custom-drag-options--', options)
+          // console.log('custom-drag-options--', JSON.stringify(options))
         },
         click(event, options){
           console.log('自定义文本绘制 click', options)

@@ -123,6 +123,7 @@ custom.onclick = () =>{
  *  - color：文本颜色
  *  - value：文本内容
  *  - strokeText：是否使用 strokeText（默认 false）
+ *  - textBaseline：文本绘制基线（只支持 top/bottom，默认 bottom）
  * 
  ************************************************************
  *  当存在 font 属性时，只会绘制文本信息，自定义 draw 函数不再生效  *
@@ -137,7 +138,8 @@ customText.onclick = function(){
       font: '100px "Microsoft YaHei"',
       color: 'red',
       value: '自定义文本绘制',
-      strokeText: true
+      strokeText: true,
+      textBaseline: 'top'
     },
     drag(event, options){
       console.log('custom-drag-options--', options)
