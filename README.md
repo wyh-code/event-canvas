@@ -44,8 +44,11 @@ eventCanvas.on('click', (event, nodes) => {
   console.log(event, nodes)
 })
 ```
-
-
+**终止拖拽**
+```js
+// 通过实例的 isMove 属性终止拖拽
+eventCanvas.isMove = false;
+```
 **动态添加元素**
 ```js
 /**
@@ -58,9 +61,8 @@ const button = document.getElementById('button');
 button.onclick = function(){
   const circle = new Circle({
     name: '黄圆',
-    x,
-    y,
-    eleId: eventCanvas.eleId,
+    x: 300,
+    y: 500,
     radius: 50,
     fillColor: 'yellow',
     drag: (event, options) => {
@@ -70,8 +72,6 @@ button.onclick = function(){
       console.log(options)
     }
   })
-  x += 200;
-  y += 200
   eventCanvas.addElement(circle)
 }
 ```

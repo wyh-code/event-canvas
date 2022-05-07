@@ -1,27 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
-    .container{
+    .container {
       margin: 30px auto;
       width: 1000px;
       border: 1px solid red;
-     
+
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <canvas id="c" style="width: 1000px; height: 600px"></canvas>
   </div>
+  <button id="add">添加</button>
   <script type="module">
     import { EventCanvas, Circle } from './index.js';
+    let x = 0;
     const eventCanvas = new EventCanvas({
-      canvas: c, 
+      canvas: c,
       sort: 1, // 1-重叠时事件触发由上到下， 0-相反
       data: [
         {
@@ -31,29 +35,51 @@
           height: 200,
           fillColor: 'red',
           type: 'rect',
-          drag(event, options){
-            console.log(event, options)
+          drag(event, options) {
+            x++;
+            if (x > 100) {
+              eventCanvas.isMove = false
+            }
+            console.log(x)
           },
           click: (event, options) => {
-            console.log('----', options)
+            x = 0
+            console.log(x, '----', options)
           }
         },
         {
+          name: '黄圆',
+          x: 200,
+          y: 400,
+          radius: 50,
+          fillColor: 'yellow',
+          type: 'circle',
+          drag() {
+
+          },
+          click: (options) => {
+            console.log(options, '==黄圆-options==')
+          }
+        }
+      ]
+    });
+    console.log(eventCanvas, '==eventCanvas==')
+    add.onclick = function(){
+      const circle = new Circle({
         name: '黄圆',
-        x: 200,
-        y: 400,
+        x: 300,
+        y: 500,
         radius: 50,
         fillColor: 'yellow',
         type: 'circle',
-        drag(){
-
-        },
+        drag(){},
         click: (options) => {
           console.log(options, '==黄圆-options==')
         }
-      }
-      ]
-    });
+      })
+      eventCanvas.addElement(circle)
+    }
   </script>
 </body>
+
 </html>
