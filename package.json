@@ -1,7 +1,8 @@
 {
   "name": "event-canvas",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "event, canvas, canvas-event, event-canvas",
+  "keywords": ["event","canvas","canvas-event", "event-canvas"],
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
