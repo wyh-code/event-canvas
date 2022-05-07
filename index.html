@@ -11,7 +11,6 @@
       margin: 30px auto;
       width: 1000px;
       border: 1px solid red;
-
     }
   </style>
 </head>
@@ -20,7 +19,11 @@
   <div class="container">
     <canvas id="c" style="width: 1000px; height: 600px"></canvas>
   </div>
-  <button id="add">添加</button>
+  <div>
+    <button id="add">添加</button>
+    <button id="customLine">自定义绘制线条</button>
+    <button id="customText">自定义绘制文字</button>
+  </div>
   <script type="module">
     import { EventCanvas, Circle } from './index.js';
     let x = 0;
@@ -28,42 +31,41 @@
       canvas: c,
       sort: 1, // 1-重叠时事件触发由上到下， 0-相反
       data: [
-        {
-          x: 10,
-          y: 10,
-          width: 200,
-          height: 200,
-          fillColor: 'red',
-          type: 'rect',
-          drag(event, options) {
-            x++;
-            if (x > 100) {
-              eventCanvas.isMove = false
-            }
-            console.log(x)
-          },
-          click: (event, options) => {
-            x = 0
-            console.log(x, '----', options)
-          }
-        },
-        {
-          name: '黄圆',
-          x: 200,
-          y: 400,
-          radius: 50,
-          fillColor: 'yellow',
-          type: 'circle',
-          drag() {
+        // {
+        //   x: 10,
+        //   y: 10,
+        //   width: 200,
+        //   height: 200,
+        //   fillColor: 'red',
+        //   type: 'rect',
+        //   drag(event, options) {
+        //     x++;
+        //     if (x > 100) {
+        //       eventCanvas.isMove = false
+        //     }
+        //     console.log(x)
+        //   },
+        //   click: (event, options) => {
+        //     x = 0
+        //     console.log(x, '----', options)
+        //   }
+        // },
+        // {
+        //   name: '黄圆',
+        //   x: 200,
+        //   y: 400,
+        //   radius: 50,
+        //   fillColor: 'yellow',
+        //   type: 'circle',
+        //   drag() {
 
-          },
-          click: (options) => {
-            console.log(options, '==黄圆-options==')
-          }
-        }
+        //   },
+        //   click: (options) => {
+        //     console.log(options, '==黄圆-options==')
+        //   }
+        // }
       ]
     });
-    console.log(eventCanvas, '==eventCanvas==')
     add.onclick = function(){
       const circle = new Circle({
         name: '黄圆',
@@ -78,6 +80,55 @@
         }
       })
       eventCanvas.addElement(circle)
+    }
+    
+    customLine.onclick = function(){
+      const options = {
+        name: 'custom',
+        drag(event, options){
+          console.log('custom-drag-options--', options)
+        },
+        // fill: true,
+        x: 300,
+        y: 350,
+        draw: (ctx) => {
+          ctx.beginPath()
+          // ctx.moveTo(300, 350);
+          // ctx.lineTo(300, 500);
+          // ctx.lineTo(500, 500);
+          ctx.moveTo(options.x, options.y);
+          ctx.lineTo(options.x, options.y + 150);
+          ctx.lineTo(options.x + 150, options.y + 150);
+          ctx.strokeStyle = 'red';
+          ctx.lineWidth = 10;
+          ctx.stroke()
+        },
+        click(event, options){
+          console.log('自定义绘制 click', options)
+        }
+      }
+      eventCanvas.custom(options)
+    }
+
+    customText.onclick = function(){
+      const options = {
+        name: 'custom',
+        x: 100,
+        y: 100,
+        font: {
+          font: '100px "Microsoft YaHei"',
+          color: 'red',
+          value: '自定义文本绘制',
+          strokeText: true
+        },
+        drag(event, options){
+          console.log('custom-drag-options--', options)
+        },
+        click(event, options){
+          console.log('自定义文本绘制 click', options)
+        }
+      }
+      eventCanvas.custom(options)
     }
   </script>
 </body>

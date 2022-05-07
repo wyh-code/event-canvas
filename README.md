@@ -10,9 +10,11 @@
  * sort: 重叠时事件触发顺序：1-由上到下，0-由下到上
  * data: 绘制元素数据 options[]
  *  - options 事件触发时，回调参数
- *  - options.click 监听事件名称（现支持：click，mousedown，mousemove，mouseup，mouseenter，mouseleave）
+ *  - options.x   起始x坐标（drag属性存在时，x值为必传项）
+ *  - options.y   起始y坐标（drag属性存在时，y值为必传项）
+ *  - options.click 监听事件回调函数（现支持：click，mousedown，mousemove，mouseup，mouseenter，mouseleave）
  *  - options.stop  是否阻止事件继续向后传递（为 true 时，阻止所有事件，为事件名时，阻止相对应事件）
- *  - options.drag  拥有此属性时，该元素可拖动
+ *  - options.drag  元素拖动的回调函数（拥有此属性时，该元素可拖动）
  *  - options.fillColor  填充色
  * */
 const eventCanas = new EventCanvas({
@@ -80,6 +82,8 @@ button.onclick = function(){
 **自定义绘制**
 ```js
 /**
+ * x  起始绘制x轴坐标（有 draw 属性时，必传）
+ * y  起始绘制y轴坐标（有 draw 属性时，必传）
  * fill 是否填充路径区域
  * draw 自定义绘制函数
  *  - draw 函数会进行二次封装，所以此函数内不必使用 ctx.save、ctx.restore()
@@ -88,15 +92,15 @@ const custom = document.getElementById('custom');
 custom.onclick = () =>{
   const options = {
     name: 'custom',
+    x: 300,
+    y: 350,
+    fill: false,
     click: (event, options) => {
       console.log(options, '==custom-click==')
     },
     drag(event, options){
       console.log('custom-drag-options--', options)
     },
-    fill: false,
-    x: 300,
-    y: 350,
     draw: (ctx) => {
       ctx.beginPath()
       ctx.moveTo(options.x, options.y);
@@ -110,6 +114,42 @@ custom.onclick = () =>{
   eventCanvas.custom(options)
 }
 ```
+**自定义绘制文本**        
+由于 <code>getImageData</code> 无法获取文本颜色，所以自定义绘制文本单独处理。
+```js
+/**
+ * font 文本属性
+ *  - font：文本样式
+ *  - color：文本颜色
+ *  - value：文本内容
+ *  - strokeText：是否使用 strokeText（默认 false）
+ * 
+ ************************************************************
+ *  当存在 font 属性时，只会绘制文本信息，自定义 draw 函数不再生效  *
+ ************************************************************
+ * */
+customText.onclick = function(){
+  const options = {
+    name: 'custom',
+    x: 100,
+    y: 100,
+    font: {
+      font: '100px "Microsoft YaHei"',
+      color: 'red',
+      value: '自定义文本绘制',
+      strokeText: true
+    },
+    drag(event, options){
+      console.log('custom-drag-options--', options)
+    },
+    click(event, options){
+      console.log('自定义文本绘制 click', options)
+    }
+  }
+  eventCanvas.custom(options)
+}
+```        
+
 **注意**
 组件多次渲染会导致事件重复挂载，可使用相关方法阻止      
 **react 示例**
