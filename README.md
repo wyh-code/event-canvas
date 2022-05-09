@@ -17,7 +17,7 @@
  *  - options.drag  元素拖动的回调函数（拥有此属性时，该元素可拖动）
  *  - options.fillColor  填充色
  * */
-const eventCanas = new EventCanvas({
+const eventCanvas = new EventCanvas({
   canvas: document.getElementById('canvas'),
   sort: 1,
   data: [
