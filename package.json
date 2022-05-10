@@ -1,6 +1,6 @@
 {
   "name": "event-canvas",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "event, canvas, canvas-event, event-canvas",
   "keywords": ["event","canvas","canvas-event", "event-canvas"],
   "main": "index.js",
