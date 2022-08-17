@@ -17,6 +17,8 @@
  *  - options.drag  元素拖动的回调函数（拥有此属性时，该元素可拖动）
  *  - options.fillColor  填充色
  * */
+import { EventCanvas } from 'event-canvas';
+
 const eventCanvas = new EventCanvas({
   canvas: document.getElementById('canvas'),
   sort: 1,
@@ -88,7 +90,7 @@ button.onclick = function(){
  * draw 自定义绘制函数
  *  - draw 函数会进行二次封装，所以此函数内不必使用 ctx.save、ctx.restore()
  * */
-const custom = document.getElementById('custom');
+const custom = document.getElementById('customButton');
 custom.onclick = () =>{
   const options = {
     name: 'custom',
@@ -161,5 +163,4 @@ customText.onclick = function(){
   if(ref.current) return;
   ref.current = true;
   const eventCanvas = new EventCanvas()
-
 ```
