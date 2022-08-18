@@ -907,7 +907,11 @@ var EventCanvas = /*#__PURE__*/function (_Event) {
 
       var _this$getStyle = this.getStyle(),
           width = _this$getStyle.width,
-          height = _this$getStyle.height;
+          height = _this$getStyle.height; // 设置样式
+
+
+      canvas.style.width = "".concat(width, "px");
+      canvas.style.height = "".concat(height, "px"); // 设置画布宽高
 
       canvas.width = width * dpr;
       canvas.height = height * dpr;
