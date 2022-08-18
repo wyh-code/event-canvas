@@ -586,7 +586,7 @@ var EventCanvas = /*#__PURE__*/function (_Event) {
     });
 
     if (!_options.canvas) {
-      console.error('canvas 为必穿参数');
+      console.error('canvas 为必传参数');
       return _possibleConstructorReturn(_this);
     } // 传递绘制实例
 
@@ -905,16 +905,40 @@ var EventCanvas = /*#__PURE__*/function (_Event) {
       var canvas = this.canvas;
       var dpr = window.devicePixelRatio;
 
-      if (!canvas.style.width || !canvas.style.height) {
-        console.error('请设置 canvas 宽高：<canvas style="width:width; height:height"></canvas>');
-        return;
-      }
+      var _this$getStyle = this.getStyle(),
+          width = _this$getStyle.width,
+          height = _this$getStyle.height;
 
-      canvas.width = parseInt(canvas.style.width) * dpr;
-      canvas.height = parseInt(canvas.style.height) * dpr;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
       this.ctx.scale(dpr, dpr); // 根据dpr 缩放画布
 
       this.dpr = dpr;
+    }
+    /**
+     * 根据父节点确定canvas宽高
+     * @returns 
+     */
+
+  }, {
+    key: "getStyle",
+    value: function getStyle() {
+      var parentNode = this.canvas.parentNode;
+      var styles = getComputedStyle(parentNode);
+      var width = parseFloat(styles.width);
+      var height = parseFloat(styles.height);
+      var borderLeftWidth = parseFloat(styles.borderLeftWidth);
+      var borderRightWidth = parseFloat(styles.borderRightWidth);
+      var borderTopWidth = parseFloat(styles.borderTopWidth);
+      var borderBottomWidth = parseFloat(styles.borderBottomWidth);
+      var paddingLeft = parseFloat(styles.paddingLeft);
+      var paddingRight = parseFloat(styles.paddingRight);
+      var paddingTop = parseFloat(styles.paddingTop);
+      var paddingBottom = parseFloat(styles.paddingBottom);
+      return {
+        width: width - borderLeftWidth - borderRightWidth - paddingLeft - paddingRight,
+        height: height - borderTopWidth - borderBottomWidth - paddingTop - paddingBottom
+      };
     }
     /**
      * 动态添加元素
