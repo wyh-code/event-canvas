@@ -1,6 +1,6 @@
 {
   "name": "event-canvas",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "event, canvas, canvas-event, event-canvas",
   "keywords": [
     "event",
@@ -26,6 +26,7 @@
     "@babel/core": "^7.18.10",
     "@babel/plugin-transform-runtime": "^7.18.10",
     "@babel/preset-env": "^7.18.10",
+    "@rollup/plugin-babel": "^5.3.1",
     "core-js": "^3.24.1"
   }
 }
