@@ -1,10 +1,149 @@
-import Event from './Event.js';
-import Rect from './Rect.js';
-import Base from './Base.js';
-import Circle from './Circle.js';
-import { rgbaToId, idToRgba, EventNames } from './utils.js';
+'use strict';
 
-export default class EventCanvas extends Event {
+Object.defineProperty(exports, '__esModule', { value: true });
+
+class Event{
+  constructor(){
+    this.listeners = {};
+  }
+
+  on(eventName, fn){
+    this.listeners[eventName] = this.listeners[eventName] || [];
+    this.listeners[eventName].push(fn);
+  }
+
+  once(eventName, fn){
+    const once = () => {
+      fn();
+      this.off(eventName, once);
+    };
+    once.l = fn;
+    this.on(eventName, once);
+  }
+
+  off(eventName, fn){
+    if(!fn){
+      this.listeners[eventName] = [];
+    }else {
+      this.listeners[eventName] = this.listeners[eventName].filter(_fn => (fn !== _fn && fn !== _fn.l));
+    }
+  }
+
+  emit(eventName, args){
+    // console.log(args, '==args==')
+    this.listeners[eventName]&&
+    this.listeners[eventName].forEach(fn => fn(args.event, args.nodes));
+  }
+}
+
+const creatId = () => [parseInt(Math.random() * 255), parseInt(Math.random() * 255), parseInt(Math.random() * 255), 255].join('-');
+
+const idToRgba = (id) => id.split('-');
+
+const rgbaToId = (rgba) => rgba.toString().split(',').join('-');
+
+const EventNames = {
+  click: 'click',
+  mousedown: 'mousedown',
+  mousemove: 'mousemove',
+  mouseup: 'mouseup',
+  mouseenter: 'mouseenter',
+  mouseleave: 'mouseleave'
+};
+
+class Base {
+  // 绘制上下文实例
+  static context = null
+  /**
+   * eleIds: 已有元素的id,
+   * ctx: 画布绘制上下文,
+   * hideCtx: 影子画布上下文 
+   * options: 元素节点信息,
+   * index: 元素绘制顺序下标
+   * @param {*} props 
+   */
+  constructor(props){
+    Object.assign(this, props);
+    // 创建id
+    this.id = this.creatId();
+  }
+
+  creatId(){
+    let id = creatId();
+    while(Base.context.eleIds[id]){
+      this.id = creatId();
+    }
+    Base.context.eleIds[id] = this;
+    return id;
+  }
+
+  getId(){
+    return this.id;
+  }
+}
+
+class Rect extends Base {
+  constructor(props){
+    super(props);
+  }
+  draw(){
+    const { x, y, width, height, fillColor, strokeColor, strokeWidth=1 } = this.options;
+    const { ctx, hideCtx } = this;
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeStyle = strokeColor || fillColor;
+    ctx.lineWidth = strokeWidth;
+    ctx.fillStyle = fillColor;
+    ctx.rect(x, y, width, height);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+
+    // 绘制隐藏屏幕
+    const [ r, g, b, a ] = idToRgba(this.getId());
+
+    hideCtx.save();
+    hideCtx.beginPath();
+    hideCtx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+    hideCtx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+    hideCtx.rect(x, y, width, height);
+    hideCtx.fill();
+    hideCtx.stroke();
+    hideCtx.restore();
+  }
+}
+
+class Circle extends Base {
+  constructor(props){
+    super(props);
+  }
+
+  draw(){
+    const { x, y, radius, fillColor, strokeColor,  strokeWidth=1 } = this.options;
+    const { ctx, hideCtx } = this;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.fillStyle = fillColor;
+    ctx.strokeColr = strokeColor || fillColor,
+    ctx.linWidth = strokeWidth;
+    ctx.arc(x,y,radius, 0 , Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // 离屏绘制
+    const [r, g , b , a] = idToRgba(this.getId());
+    hideCtx.save();
+    hideCtx.beginPath();
+    hideCtx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+    hideCtx.lineWidth = strokeWidth;
+    hideCtx.arc(x, y, radius, 0, Math.PI * 2);
+    hideCtx.fill();
+    hideCtx.restore();
+  }
+}
+
+class EventCanvas extends Event {
   /**
    * canvas 画布
    * data 元素数据
@@ -190,7 +329,7 @@ export default class EventCanvas extends Event {
         ele.options.y = y - offsetY;
         ele.hideCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         // ele.hideCtx.clearRect(0, 0, 2000, 1200)
-        console.log(ele.hideCtx.canvas, 0, 0, this.canvas.width, this.canvas.height)
+        console.log(ele.hideCtx.canvas, 0, 0, this.canvas.width, this.canvas.height);
         this.draw();
         ele.options.drag && ele.options.drag(event, ele.options);
       }
@@ -380,7 +519,7 @@ export default class EventCanvas extends Event {
 
     if(options.font.strokeText){
       this.ctx.strokeText(options.font.value, options.x, options.y+height);
-    }else{
+    }else {
       this.ctx.fillText(options.font.value, options.x, options.y+height);
     }
     this.ctx.restore();
@@ -408,7 +547,7 @@ export default class EventCanvas extends Event {
     document.body.appendChild(span);
     let width = span.clientWidth;
     let height = span.clientHeight;
-    span.remove()
+    span.remove();
    
     return {
       width,
@@ -435,3 +574,7 @@ export default class EventCanvas extends Event {
     hideCtx.restore();
   };
 }
+
+exports.Circle = Circle;
+exports.EventCanvas = EventCanvas;
+exports.Rect = Rect;
