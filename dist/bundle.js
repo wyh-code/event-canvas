@@ -918,6 +918,8 @@ var EventCanvas = /*#__PURE__*/function (_Event) {
       this.ctx.scale(dpr, dpr); // 根据dpr 缩放画布
 
       this.dpr = dpr;
+      this.width = width;
+      this.height = height;
     }
     /**
      * 根据父节点确定canvas宽高
